@@ -1,12 +1,36 @@
 <script setup>
-import SampleTwo from './components/practices/basic/SampleTwo.vue';
+import SampleTwo from './components/practices/basic/SampleTwo.vue'
 import SampleOne from './components/practices/basic/SmapleOne.vue'
+import DirectiveHtml from './components/practices/basic/DirectiveHtml.vue'
+import DirectiveText from './components/practices/basic/DirectiveText.vue';
+import DirectiveBind from './components/practices/basic/DirectiveBind.vue';
+import DirectiveBindC from './components/practices/basic/DirectiveBindC.vue';
+import StyleBind from './components/practices/basic/StyleBind.vue';
+import EventHandler from './components/practices/basic/EventHandler.vue';
+import EventModifier from './components/practices/basic/EventModifier.vue';
+import EventObject from './components/practices/basic/EventObject.vue';
+import TwoWay from './components/practices/basic/TwoWay.vue';
+import FormBind from './components/practices/basic/FormBind.vue';
+import BindModifier from './components/practices/basic/BindModifier.vue';
+import VueStyle from './components/practices/basic/VueStyle.vue';
 </script>
 
 <template>
   <div>
     <SampleOne></SampleOne>
     <SampleTwo></SampleTwo>
+    <DirectiveHtml></DirectiveHtml>
+    <DirectiveText></DirectiveText>
+    <DirectiveBind></DirectiveBind>
+    <DirectiveBindC></DirectiveBindC>
+    <StyleBind></StyleBind>
+    <EventHandler></EventHandler>
+    <EventObject></EventObject>
+    <EventModifier></EventModifier>
+    <TwoWay></TwoWay>
+    <FormBind></FormBind>
+    <BindModifier></BindModifier>
+    <VueStyle></VueStyle>
   </div>
 </template>
 
