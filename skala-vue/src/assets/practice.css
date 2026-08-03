@@ -126,3 +126,12 @@ input:focus {
 .btn-external:active {
   background-color: #2c8a5f;
 }
+
+/* status bar 스타일 */
+.status-bar {
+  align-items: center;
+  padding: 8px 16px;
+  background-color: #7bc975;
+  border: #531b83;
+  border-radius: 5px;
+}
