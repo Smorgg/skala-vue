@@ -15,11 +15,6 @@ defineProps({
   <div class="search-inner">
     <h3>🔍 도시 검색</h3>
     <hr />
-    <!-- v-model.trim.lazy를 사용해 실습해 본 결과 포커스를 잃거나 엔터를 눌렀을 때만 검색창에 입력이 발생한다. 실시간으로 입력 데이터를 받아야하는 경우가 아니라면 v-model과 modifier를 사용하는 것이 좋다고 판단된다.
-    <input type="text"
-    v-model.trim.lazy="searchQuery"
-    placeholder="검색할 도시 이름 입력"
-    /> -->
     <input
       type="text"
       :value="currentQuery"

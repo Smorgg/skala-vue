@@ -62,6 +62,17 @@
   border-radius: 8px;
 }
 
+.weather-soso {
+  max-width: 200px;
+  padding: 10px 18px;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  background-color: #42b865;
+  border: 2px solid #42b865;
+  border-radius: 8px;
+}
+
 .weather-cold {
   max-width: 200px;
   padding: 10px 18px;
