@@ -14,9 +14,15 @@ dist-ssr
 coverage
 *.local
 
+# Local environment variables (keep the example file in Git)
+.env
+.env.*
+!.env.example
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
+!.vscode/*.code-snippets
 .idea
 *.suo
 *.ntvs*

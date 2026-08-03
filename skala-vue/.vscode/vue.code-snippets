@@ -1,0 +1,8 @@
+{
+  "Vue script setup": {
+    "scope": "vue",
+    "prefix": "vsetup",
+    "body": ["<script setup>", "$0", "</script>"],
+    "description": "Vue script setup block"
+  }
+}
