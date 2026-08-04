@@ -1,13 +1,23 @@
 <script setup>
-import WeatherParent from './components/exercise/WeatherParent.vue'
+import { RouterLink, RouterView } from 'vue-router'
 </script>
 
 <template>
-  <div class="practice-container">
-    <WeatherParent />
+  <div class="app-container">
+    <div class="dashboard-wrapper">
+      <nav class="navigation-bar">
+        <RouterLink to="/">WeatherHome</RouterLink>
+        <span class="divider">|</span>
+        <RouterLink to="/about">서비스 소개</RouterLink>
+        <RouterLink to="/1">오류</RouterLink>
+      </nav>
+    </div>
+    <main>
+      <RouterView />
+    </main>
   </div>
 </template>
 
 <style>
-@import '@/assets/practice.css';
+@import '@/assets/exercise.css';
 </style>

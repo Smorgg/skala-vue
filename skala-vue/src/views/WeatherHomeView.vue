@@ -1,21 +1,22 @@
 <script setup>
 import { ref, computed, watch, watchEffect } from 'vue'
-// 1. 컴포넌트 파일명 국룰 표기법(PascalCase) 매칭 수입
-import BaseDashboardCard from './BaseDashboardCard.vue'
-import SearchBar from './SearchBar.vue'
-import WeatherCard from './WeatherCard.vue'
+import { useRouter } from 'vue-router'
+import BaseDashboardCard from '@/components/exercise/BaseDashboardCard.vue'
+import SearchBar from '@/components/exercise/SearchBar.vue'
+import WeatherCard from '@/components/exercise/WeatherCard.vue'
+
+const router = useRouter()
 
 // Prop, Emit은 js에서 컴포넌트간 데이터 이벤트 처리
 const weatherList = ref([
   { id: 'city_01', name: '서울', temp: 28, status: '맑음' },
   { id: 'city_02', name: '수원', temp: 24, status: '비' },
-  { id: 'city_03', name: '부산', temp: 26, status: '구름' },
+  { id: 'city_03', name: '부산', temp: 25, status: '구름' },
 ])
 
 const searchQuery = ref('')
 const selectedCityInfo = ref('카드를 클릭하거나 검색해 보세요.')
 
-// 기존 핵심 비즈니스 로직(computed, watch)의 소유권은 안전하게 부모 콘텍스트가 격리 유지
 const filteredWeatherList = computed(() => {
   const query = searchQuery.value.trim()
   if (!query) return weatherList.value
@@ -32,8 +33,8 @@ watchEffect(() => {
   )
 })
 
-const showDetail = (cityName, status) => {
-  window.alert(`${cityName}의 현재 날씨는 [${status}] 상태입니다.`)
+const handleWeatherDetail = (id) => {
+  router.push(`/weather/${id}`)
 }
 </script>
 
@@ -52,7 +53,7 @@ const showDetail = (cityName, status) => {
         :key="item.id"
         :city-item="item"
         @select-card="(msg) => (selectedCityInfo = msg)"
-        @click-detail="showDetail"
+        @click-detail="handleWeatherDetail(item.id)"
       />
 
       <p
