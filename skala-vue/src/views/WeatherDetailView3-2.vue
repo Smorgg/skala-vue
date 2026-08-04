@@ -2,47 +2,23 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useConfigStore } from '@/stores/configStore'
-import axios from 'axios'
 
 const route = useRoute()
 const router = useRouter()
 const configStore = useConfigStore()
 
-const cityData = ref(null)
-const isLoading = ref(false)
-
-const cityMapping = {
-  city_01: { english: 'Seoul', korean: '서울' },
-  city_02: { english: 'Suwon', korean: '수원' },
-  city_03: { english: 'Busan', korean: '부산' },
+const cityDetails = {
+  city_01: { name: '서울', temp: 28, status: '맑음', humidity: '55%', wind: '2.5m/s' },
+  city_02: { name: '수원', temp: 24, status: '비', humidity: '90%', wind: '0.5m/s' },
+  city_03: { name: '부산', temp: 25, status: '구름', humidity: '60%', wind: '5m/s' },
 }
 
-onMounted(async () => {
+const cityData = ref(null)
+
+onMounted(() => {
   const id = route.params.cityId
-  const targetCity = cityMapping[id]
-
-  if (targetCity) {
-    isLoading.value = true
-
-    try {
-      const API_KEY = '838916097d27b636734a99199c34302d'
-      const response = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?q=${targetCity.english}&appid=${API_KEY}&units=metric&lang=kr`,
-      )
-
-      const raw = response.data
-      cityData.value = {
-        name: targetCity.korean,
-        temp: raw.main.temp,
-        status: raw.weather[0].description,
-        humidity: `${raw.main.humidity}%`,
-        wind: `${raw.wind.speed}m/s`,
-      }
-    } catch (error) {
-      console.error('상세 정보 로딩 중 네트워크 에러 발행: ', error)
-    } finally {
-      isLoading.value = false
-    }
+  if (cityDetails[id]) {
+    cityData.value = cityDetails[id]
   }
 })
 
