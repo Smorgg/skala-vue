@@ -1,6 +1,5 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import UnitToggler from './components/exercise/UnitToggler.vue'
 </script>
 
 <template>
@@ -10,7 +9,7 @@ import UnitToggler from './components/exercise/UnitToggler.vue'
         <RouterLink to="/">WeatherHome</RouterLink>
         <span class="divider">|</span>
         <RouterLink to="/about">서비스 소개</RouterLink>
-        <UnitToggler></UnitToggler>
+        <RouterLink to="/1">오류</RouterLink>
       </nav>
     </div>
     <main>

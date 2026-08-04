@@ -1,9 +1,11 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useConfigStore } from '@/stores/configStore'
 
 const route = useRoute()
 const router = useRouter()
+const configStore = useConfigStore()
 
 const cityDetails = {
   city_01: { name: '서울', temp: 28, status: '맑음', humidity: '55%', wind: '2.5m/s' },
@@ -19,6 +21,15 @@ onMounted(() => {
     cityData.value = cityDetails[id]
   }
 })
+
+const displayTemp = computed(() => {
+  if (!cityData.value) return 0
+  const rawTemp = cityData.value.temp
+  if (configStore.unit === 'fahrenheit') {
+    return Math.round((rawTemp * 9) / 5 + 32)
+  }
+  return rawTemp
+})
 </script>
 
 <template>
@@ -27,11 +38,25 @@ onMounted(() => {
     <hr />
     <div v-if="cityData">
       <h4>지정 지역: {{ cityData.name }}</h4>
-      <p>실시간 기온: {{ cityData.temp }}°C</p>
+      <p>실시간 기온: {{ displayTemp }}{{ configStore.unitSymbol }}</p>
       <p>기상 현황: {{ cityData.status }}</p>
       <p>대기 습도: {{ cityData.humidity }}</p>
       <p>현재 풍속: {{ cityData.wind }}</p>
     </div>
-    <button @click="router.push('/')">매인 대시보드로 돌아가기</button>
+    <button @click="router.push('/')" class="btn-home">매인 대시보드로 돌아가기</button>
   </div>
 </template>
+
+<style scoped>
+.btn-home {
+  width: 100%;
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+}
+</style>
