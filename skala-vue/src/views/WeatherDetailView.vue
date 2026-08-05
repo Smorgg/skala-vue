@@ -57,30 +57,48 @@ const displayTemp = computed(() => {
 </script>
 
 <template>
-  <div>
-    <h3>지역별 상세 기상 관측 정보</h3>
-    <hr />
-    <div v-if="cityData">
-      <h4>지정 지역: {{ cityData.name }}</h4>
-      <p>실시간 기온: {{ displayTemp }}{{ configStore.unitSymbol }}</p>
-      <p>기상 현황: {{ cityData.status }}</p>
-      <p>대기 습도: {{ cityData.humidity }}</p>
-      <p>현재 풍속: {{ cityData.wind }}</p>
-    </div>
-    <button @click="router.push('/')" class="btn-home">매인 대시보드로 돌아가기</button>
-  </div>
-</template>
+  <v-container class="pa-0" max-width="600">
+    <v-card elevation="2" rounded="xl">
+      <v-card-title class="pa-5">지역별 상세 기상 관측 정보</v-card-title>
+      <v-divider />
 
-<style scoped>
-.btn-home {
-  width: 100%;
-  margin-top: 15px;
-  padding: 10px;
-  background-color: #3498db;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-}
-</style>
+      <v-card-text v-if="cityData" class="pa-5">
+        <h4 class="mb-3 text-h6">지정 지역: {{ cityData.name }}</h4>
+        <v-list bg-color="transparent">
+          <v-list-item
+            prepend-icon="mdi-thermometer"
+            :subtitle="`${displayTemp}${configStore.unitSymbol}`"
+            title="실시간 기온"
+          />
+          <v-list-item
+            prepend-icon="mdi-weather-cloudy"
+            :subtitle="cityData.status"
+            title="기상 현황"
+          />
+          <v-list-item
+            prepend-icon="mdi-water-percent"
+            :subtitle="cityData.humidity"
+            title="대기 습도"
+          />
+          <v-list-item
+            prepend-icon="mdi-weather-windy"
+            :subtitle="cityData.wind"
+            title="현재 풍속"
+          />
+        </v-list>
+      </v-card-text>
+
+      <v-card-actions class="pa-5 pt-0">
+        <v-btn
+          block
+          color="primary"
+          prepend-icon="mdi-arrow-left"
+          variant="tonal"
+          @click="router.push('/')"
+        >
+          메인 대시보드로 돌아가기
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-container>
+</template>

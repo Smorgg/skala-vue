@@ -92,15 +92,18 @@ const handleWeatherDetail = (id) => {
 
 <template>
   <!-- slot은 자식 컴포넌트의 특정 영역을 부모가 구성 -->
-  <div class="dashboard-wrapper">
+  <v-container class="pa-0" max-width="600">
     <BaseDashboardCard>
       <SearchBar :current-query="searchQuery" @update-query="(val) => (searchQuery = val)" />
     </BaseDashboardCard>
 
     <BaseDashboardCard>
-      <h3>🏙️ 지역별 날씨 현황</h3>
+      <h3 class="mb-3 text-h6 font-weight-bold">🏙️ 지역별 날씨 현황</h3>
       <!-- 카드 선택 여부도 WeatherCard 컴포넌트에서 처리하기 때문데 selectedCityInfo또한 WeatherCard에서 처리하고 표시만 부모 컴포넌트에서 -->
-      <p v-if="isLoading">글로벌 기상 위성으로부터 실시간 기상 데이터를 수신 중입니...다</p>
+      <v-alert v-if="isLoading" color="info" icon="mdi-satellite-uplink" variant="tonal">
+        글로벌 기상 위성으로부터 실시간 기상 데이터를 수신 중입니다.
+        <v-progress-linear class="mt-3" color="info" indeterminate />
+      </v-alert>
       <template v-else>
         <WeatherCard
           v-for="item in filteredWeatherList"
@@ -110,23 +113,19 @@ const handleWeatherDetail = (id) => {
           @click-detail="handleWeatherDetail(item.id)"
         />
       </template>
-      <p
+      <v-alert
         v-if="filteredWeatherList.length === 0"
-        style="text-align: center; color: #e74c3c; padding: 10px 0"
+        class="mt-3"
+        color="error"
+        icon="mdi-map-marker-off-outline"
+        variant="tonal"
       >
-        😭 검색 결과와 일치하는 도시가 없습니다.
-      </p>
+        검색 결과와 일치하는 도시가 없습니다.
+      </v-alert>
     </BaseDashboardCard>
 
-    <div class="status-bar">
+    <v-alert color="success" icon="mdi-information-outline" variant="tonal">
       {{ selectedCityInfo }}
-    </div>
-  </div>
+    </v-alert>
+  </v-container>
 </template>
-
-<style scoped>
-.dashboard-wrapper {
-  width: 600px;
-  margin: 0 auto;
-}
-</style>

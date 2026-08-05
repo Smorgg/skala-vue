@@ -9,9 +9,9 @@ export const useConfigStore = defineStore('config', () => {
     return unit.value === 'celsius' ? '℃' : '℉'
   })
 
-  const toggleUnit = computed(() => {
+  const toggleUnit = () => {
     unit.value = unit.value === 'celsius' ? 'fahrenheit' : 'celsius'
-  })
+  }
 
   return { unit, unitSymbol, toggleUnit }
 })

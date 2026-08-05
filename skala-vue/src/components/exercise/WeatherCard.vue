@@ -24,52 +24,48 @@ const displayTemp = computed(() => {
 </script>
 
 <template>
-  <div class="weather-card" @click="emit('select-card', `${cityItem.name}이 선택되었습니다.`)">
-    <h4>{{ props.cityItem.name }} ({{ props.cityItem.status }})</h4>
-    <p>현재 기온: {{ displayTemp }}{{ configStore.unitSymbol }}</p>
+  <v-card
+    class="mb-3"
+    hover
+    rounded="lg"
+    variant="outlined"
+    @click="emit('select-card', `${cityItem.name}이 선택되었습니다.`)"
+  >
+    <v-card-item>
+      <v-card-title>{{ props.cityItem.name }}</v-card-title>
+      <v-card-subtitle>{{ props.cityItem.status }}</v-card-subtitle>
+    </v-card-item>
 
-    <span v-if="cityItem.temp > 25" class="badge hot">🔥 더움</span>
-    <span v-else-if="cityItem.temp === 25" class="badge soso">🍃 보통</span>
-    <span v-else class="badge cool">❄️ 선선함</span>
+    <v-card-text>
+      <p class="mb-3 text-body-1">
+        현재 기온: <strong>{{ displayTemp }}{{ configStore.unitSymbol }}</strong>
+      </p>
 
-    <button class="btn-detail" @click.stop="emit('click-detail', cityItem.name, cityItem.status)">
-      상세보기
-    </button>
-    <slot name="btn-detail"></slot>
-  </div>
+      <v-chip v-if="cityItem.temp > 25" color="error" prepend-icon="mdi-weather-sunny" size="small">
+        더움
+      </v-chip>
+      <v-chip
+        v-else-if="cityItem.temp === 25"
+        color="success"
+        prepend-icon="mdi-weather-partly-cloudy"
+        size="small"
+      >
+        보통
+      </v-chip>
+      <v-chip v-else color="info" prepend-icon="mdi-snowflake" size="small">선선함</v-chip>
+    </v-card-text>
+
+    <v-card-actions>
+      <v-spacer />
+      <v-btn
+        append-icon="mdi-chevron-right"
+        color="primary"
+        variant="text"
+        @click.stop="emit('click-detail', cityItem.name, cityItem.status)"
+      >
+        상세보기
+      </v-btn>
+      <slot name="btn-detail" />
+    </v-card-actions>
+  </v-card>
 </template>
-
-<style scoped>
-.weather-card {
-  background: #fff;
-  border: 1px solid #dee2e6;
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-}
-.badge {
-  display: inline-block;
-  padding: 4px 8px;
-  font-size: 12px;
-  border-radius: 4px;
-  color: #fff;
-}
-.hot {
-  background-color: #ff7675;
-}
-.soso {
-  background-color: aquamarine;
-}
-.cool {
-  background-color: #74b9ff;
-}
-.btn-detail {
-  position: absolute;
-  right: 12px;
-  top: 15px;
-  padding: 6px 10px;
-  cursor: pointer;
-}
-</style>

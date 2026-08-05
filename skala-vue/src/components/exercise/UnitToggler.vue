@@ -5,33 +5,20 @@ const configStore = useConfigStore()
 </script>
 
 <template>
-  <div class="nav-unit-toggle">
-    <span
-      >날씨단위: {{ configStore.unit === 'celsius' ? '섭씨' : '화씨' }} ({{
+  <v-sheet class="d-flex align-center ga-2" color="transparent">
+    <span class="d-none d-md-inline text-body-2 text-medium-emphasis"
+      >날씨 단위: {{ configStore.unit === 'celsius' ? '섭씨' : '화씨' }} ({{
         configStore.unitSymbol
       }})</span
     >
-    <button @click="configStore.toggleUnit" class="btn-unit-change">단위변경</button>
-  </div>
+    <v-btn
+      color="primary"
+      prepend-icon="mdi-swap-horizontal"
+      size="small"
+      variant="tonal"
+      @click="configStore.toggleUnit"
+    >
+      단위 변경
+    </v-btn>
+  </v-sheet>
 </template>
-
-<style scoped>
-.nav-unit-toggle {
-  text-align: center;
-  margin-left: auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-.btn-unit-change {
-  width: 80px;
-  align-items: center;
-  padding: 10px;
-  background-color: #3498db;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-}
-</style>

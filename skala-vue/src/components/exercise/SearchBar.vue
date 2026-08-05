@@ -12,17 +12,22 @@ defineProps({
 </script>
 
 <template>
-  <div class="search-inner">
-    <h3>🔍 도시 검색</h3>
-    <hr />
-    <input
-      type="text"
-      :value="currentQuery"
-      @input="$emit('update-query', $event.target.value)"
+  <v-sheet color="transparent">
+    <h3 class="text-h6 font-weight-bold">🔍 도시 검색</h3>
+    <v-divider class="my-3" />
+    <v-text-field
+      :model-value="currentQuery"
+      clearable
+      color="primary"
+      hide-details
+      label="도시 이름"
       placeholder="검색할 도시 이름 입력"
+      prepend-inner-icon="mdi-magnify"
+      variant="outlined"
+      @update:model-value="$emit('update-query', $event ?? '')"
     />
-    <p>
-      검색 중인 도시: <strong>{{ currentQuery }}</strong>
+    <p class="mt-3 text-body-2 text-medium-emphasis">
+      검색 중인 도시: <strong class="text-primary">{{ currentQuery }}</strong>
     </p>
-  </div>
+  </v-sheet>
 </template>

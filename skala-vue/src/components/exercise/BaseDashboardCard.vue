@@ -1,15 +1,5 @@
 <template>
-  <div class="base-dashboard-card">
-    <slot></slot>
-  </div>
+  <v-card class="mb-4 pa-4" color="surface" elevation="1" rounded="lg">
+    <slot />
+  </v-card>
 </template>
-
-<style scoped>
-.base-dashboard-card {
-  background: #f8f9fa;
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  border: 1px solid #e9ecef;
-}
-</style>
