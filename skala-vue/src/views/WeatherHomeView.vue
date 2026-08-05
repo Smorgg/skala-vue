@@ -169,7 +169,7 @@ const handleWeatherDetail = (item) => {
       </v-alert>
     </BaseDashboardCard>
 
-    <WeatherMap :loading="isLoading" :locations="weatherList" />
+    <WeatherMap :loading="isLoading" :locations="weatherList" @view-detail="handleWeatherDetail" />
 
     <v-alert color="info" icon="mdi-information-outline" variant="tonal">
       {{ selectedCityInfo }}

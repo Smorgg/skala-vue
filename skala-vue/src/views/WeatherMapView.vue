@@ -245,6 +245,7 @@ onMounted(() => {
       :locations="locations"
       selectable
       @select-location="handleMapLocationSelect"
+      @view-detail="openWeatherDetail"
     />
 
     <section v-if="locations.length" aria-labelledby="observations-title">

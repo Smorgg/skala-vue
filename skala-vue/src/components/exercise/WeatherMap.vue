@@ -24,7 +24,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['select-location'])
+const emit = defineEmits(['select-location', 'view-detail'])
 
 const configStore = useConfigStore()
 const mapElement = ref(null)
@@ -124,9 +124,26 @@ const createLocationTooltip = (location) => {
   const title = document.createElement('strong')
   const description = document.createElement('div')
 
+  wrapper.className = 'weather-location-window'
+  title.className = 'weather-location-title'
+  description.className = 'weather-location-description'
   title.textContent = location.name
   description.textContent = `${location.status} · ${convertTemperature(location.temp)}${configStore.unitSymbol}`
   wrapper.append(title, description)
+
+  if (location.query) {
+    const detailButton = document.createElement('button')
+    detailButton.className = 'weather-location-detail'
+    detailButton.type = 'button'
+    detailButton.textContent = '상세보기'
+    detailButton.addEventListener('click', (event) => {
+      L.DomEvent.stopPropagation(event)
+      emit('view-detail', location)
+    })
+    wrapper.append(detailButton)
+  }
+
+  L.DomEvent.disableClickPropagation(wrapper)
   return wrapper
 }
 
@@ -148,18 +165,32 @@ const updateLocations = () => {
     const point = [location.lat, location.lon]
     bounds.push(point)
 
-    L.circleMarker(point, {
+    const marker = L.circleMarker(point, {
       radius: 8,
       weight: 3,
       color: '#ffffff',
       fillColor: '#1976d2',
       fillOpacity: 0.95,
+      bubblingMouseEvents: false,
     })
       .bindTooltip(createLocationTooltip(location), {
         direction: 'top',
+        interactive: true,
         offset: [0, -8],
       })
+      .bindPopup(createLocationTooltip(location), {
+        className: 'weather-location-popup',
+        closeButton: true,
+        maxWidth: 280,
+        offset: [0, -5],
+      })
       .addTo(locationLayer)
+
+    marker.on('click', (event) => {
+      if (event.originalEvent) L.DomEvent.stopPropagation(event.originalEvent)
+      marker.closeTooltip()
+      marker.openPopup()
+    })
   })
 
   if (bounds.length === 1) {
@@ -366,6 +397,56 @@ onBeforeUnmount(() => {
   border-radius: 10px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
   line-height: 1.45;
+}
+
+:deep(.weather-location-popup .leaflet-popup-content-wrapper) {
+  border-radius: 12px;
+  color: rgb(var(--v-theme-on-surface));
+  background: rgb(var(--v-theme-surface));
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+}
+
+:deep(.weather-location-popup .leaflet-popup-tip) {
+  background: rgb(var(--v-theme-surface));
+}
+
+:deep(.weather-location-popup .leaflet-popup-content) {
+  min-width: 180px;
+  margin: 14px 18px;
+}
+
+:deep(.weather-location-title) {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 0.925rem;
+}
+
+:deep(.weather-location-description) {
+  color: rgba(var(--v-theme-on-surface), 0.72);
+  font-size: 0.8rem;
+}
+
+:deep(.weather-location-detail) {
+  width: 100%;
+  margin-top: 10px;
+  padding: 7px 12px;
+  border: 0;
+  border-radius: 8px;
+  color: rgb(var(--v-theme-on-primary));
+  background: rgb(var(--v-theme-primary));
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+:deep(.weather-location-detail:hover) {
+  filter: brightness(1.08);
+}
+
+:deep(.weather-location-detail:focus-visible) {
+  outline: 2px solid rgb(var(--v-theme-primary));
+  outline-offset: 2px;
 }
 
 @media (max-width: 599px) {
