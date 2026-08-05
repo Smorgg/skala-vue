@@ -106,6 +106,8 @@ const legendTickLabels = computed(() =>
 let map = null
 let weatherTileLayer = null
 let locationLayer = null
+let pinnedLocationMarker = null
+let popupCloseTimer = null
 
 const handleMapClick = ({ latlng }) => {
   emit('select-location', {
@@ -119,7 +121,7 @@ const convertTemperature = (temperature) => {
   return Math.round(temperature)
 }
 
-const createLocationTooltip = (location) => {
+const createLocationPopup = (location) => {
   const wrapper = document.createElement('div')
   const title = document.createElement('strong')
   const description = document.createElement('div')
@@ -150,6 +152,9 @@ const createLocationTooltip = (location) => {
 const updateLocations = () => {
   if (!map || !locationLayer) return
 
+  if (popupCloseTimer) clearTimeout(popupCloseTimer)
+  popupCloseTimer = null
+  pinnedLocationMarker = null
   locationLayer.clearLayers()
   const validLocations = props.locations.filter(
     (location) => Number.isFinite(location.lat) && Number.isFinite(location.lon),
@@ -173,23 +178,56 @@ const updateLocations = () => {
       fillOpacity: 0.95,
       bubblingMouseEvents: false,
     })
-      .bindTooltip(createLocationTooltip(location), {
-        direction: 'top',
-        interactive: true,
-        offset: [0, -8],
-      })
-      .bindPopup(createLocationTooltip(location), {
+      .bindPopup(createLocationPopup(location), {
         className: 'weather-location-popup',
         closeButton: true,
         maxWidth: 280,
         offset: [0, -5],
+        autoPan: false,
       })
       .addTo(locationLayer)
 
+    const cancelPopupClose = () => {
+      if (!popupCloseTimer) return
+      clearTimeout(popupCloseTimer)
+      popupCloseTimer = null
+    }
+
+    const schedulePopupClose = () => {
+      cancelPopupClose()
+      popupCloseTimer = setTimeout(() => {
+        if (pinnedLocationMarker !== marker) marker.closePopup()
+        popupCloseTimer = null
+      }, 160)
+    }
+
+    marker.on('mouseover', () => {
+      cancelPopupClose()
+      if (!pinnedLocationMarker) marker.openPopup()
+    })
+
+    marker.on('mouseout', schedulePopupClose)
+
     marker.on('click', (event) => {
       if (event.originalEvent) L.DomEvent.stopPropagation(event.originalEvent)
-      marker.closeTooltip()
+      cancelPopupClose()
+      if (pinnedLocationMarker && pinnedLocationMarker !== marker) {
+        pinnedLocationMarker.closePopup()
+      }
+      pinnedLocationMarker = marker
       marker.openPopup()
+    })
+
+    marker.on('popupopen', ({ popup }) => {
+      const popupElement = popup.getElement()
+      if (!popupElement) return
+      popupElement.onmouseenter = cancelPopupClose
+      popupElement.onmouseleave = schedulePopupClose
+    })
+
+    marker.on('popupclose', () => {
+      cancelPopupClose()
+      if (pinnedLocationMarker === marker) pinnedLocationMarker = null
     })
   })
 
@@ -251,6 +289,9 @@ watch(
 )
 
 onBeforeUnmount(() => {
+  if (popupCloseTimer) clearTimeout(popupCloseTimer)
+  popupCloseTimer = null
+  pinnedLocationMarker = null
   map?.remove()
   map = null
   weatherTileLayer = null
@@ -390,13 +431,6 @@ onBeforeUnmount(() => {
 
 :deep(.leaflet-control-attribution) {
   font-size: 10px;
-}
-
-:deep(.leaflet-tooltip) {
-  border: 0;
-  border-radius: 10px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
-  line-height: 1.45;
 }
 
 :deep(.weather-location-popup .leaflet-popup-content-wrapper) {
