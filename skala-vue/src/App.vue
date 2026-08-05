@@ -5,7 +5,7 @@ import UnitToggler from './components/exercise/UnitToggler.vue'
 
 <template>
   <v-app>
-    <v-main class="bg-grey-lighten-4">
+    <v-main class="bg-background">
       <v-container class="py-8" max-width="900">
         <h1 class="mb-4 text-h4 font-weight-bold">종합실습 5: 스토어 적용</h1>
 
