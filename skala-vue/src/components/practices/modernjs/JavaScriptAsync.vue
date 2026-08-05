@@ -3,18 +3,19 @@ import { ref } from 'vue'
 
 const result3 = ref('')
 
-const fetchUserId = () => new Promise(res => setTimeout(() => res({uid: 777})), 400)
-const fetchUserProfile = (uid) => new Promise(res => setTimeout(() => res({uid, nick: 'Graves'}), 400))
+const fetchUserId = () => new Promise((res) => setTimeout(() => res({ uid: 777 })), 400)
+const fetchUserProfile = (uid) =>
+  new Promise((res) => setTimeout(() => res({ uid, nick: 'Graves' }), 400))
 
 const runTask3 = async () => {
   result3.value = '데이터 동기화 중...'
 
   try {
-    const {uid} = await fetchUserId()
-    const {nick} = await fetchUserProfile(uid)
+    const { uid } = await fetchUserId()
+    const { nick } = await fetchUserProfile(uid)
 
     result3.value = `동기화 성공: ${nick}님 환영합니다.`
-  } catch (error) {
+  } catch {
     result3.value = '통신 실패'
   }
 }
