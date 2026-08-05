@@ -16,7 +16,7 @@ const selectedCityInfo = ref('카드를 클릭하거나 검색해 보세요.')
 const isLoading = ref(false)
 const searchError = ref('')
 
-const API_KEY = '838916097d27b636734a99199c34302d'
+const OPENWEATHER_API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY
 const BASE_URL = 'https://api.openweathermap.org/data/2.5/weather'
 
 const koreanCityQueries = {
@@ -48,7 +48,7 @@ const fetchRealTimeWeather = async (city = '') => {
         const koreanCityName = searchTerm.replace(/(특별자치시|특별시|광역시|시)$/u, '')
         const apiQuery = koreanCityQueries[koreanCityName] || searchTerm
         const response = await axios.get(
-          `${BASE_URL}?q=${encodeURIComponent(apiQuery)}&appid=${API_KEY}&units=metric&lang=kr`,
+          `${BASE_URL}?q=${encodeURIComponent(apiQuery)}&appid=${OPENWEATHER_API_KEY}&units=metric&lang=kr`,
         )
         const raw = response.data
 

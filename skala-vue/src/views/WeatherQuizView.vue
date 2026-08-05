@@ -395,7 +395,9 @@ onMounted(loadQuizRound)
 
     <p class="mt-3 text-center text-caption text-medium-emphasis">
       Weather data by
-      <a href="https://openweathermap.org/" rel="noopener noreferrer" target="_blank">OpenWeather</a>
+      <a href="https://openweathermap.org/" rel="noopener noreferrer" target="_blank"
+        >OpenWeather</a
+      >
     </p>
   </v-container>
 </template>
