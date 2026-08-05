@@ -19,6 +19,7 @@ const displayTemp = computed(() => {
   if (configStore.unit === 'fahrenheit') {
     return Math.round((rawTemp * 9) / 5 + 32)
   }
+
   return rawTemp
 })
 

@@ -26,5 +26,13 @@ export default defineConfig([
 
   ...pluginOxlint.buildFromOxlintConfigFile('.oxlintrc.json'),
 
+  {
+    name: 'app/custom-rules',
+    rules: {
+      'eqeqeq': ['error', 'always'],
+      'no-console': 'off'
+    }
+  },
+
   skipFormatting,
 ])

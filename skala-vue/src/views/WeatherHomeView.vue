@@ -16,6 +16,9 @@ const selectedCityInfo = ref('카드를 클릭하거나 검색해 보세요.')
 const isLoading = ref(false)
 const searchError = ref('')
 
+// 빌드 환경 테스트용
+const API_URL = import.meta.env.VITE_API_URL
+
 const OPENWEATHER_API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY
 const BASE_URL = 'https://api.openweathermap.org/data/2.5/weather'
 
@@ -76,6 +79,8 @@ const fetchRealTimeWeather = async (city = '') => {
 }
 
 onMounted(() => {
+  // 빌드 환경 테스트 용
+  console.log(`${API_URL}`)
   const initialQuery = typeof route.query.search === 'string' ? route.query.search.trim() : ''
   searchQuery.value = initialQuery
   fetchRealTimeWeather(initialQuery)

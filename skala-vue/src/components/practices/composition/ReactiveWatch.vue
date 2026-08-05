@@ -1,5 +1,5 @@
 <script setup>
-import {ref, watch} from 'vue'
+import { ref, watch } from 'vue'
 
 const currentCity = ref('서울')
 const logMessage = ref('아직 감시 시스템이 작동하지 않았습니다.')
@@ -20,7 +20,7 @@ watch(currentCity, (newValue, oldValue) => {
     <div class="monitor">
       <h3>파수꾼(watch) 모니터링 시스템</h3>
       <p>{{ logMessage }}</p>
-      <small style="color: gray;">(버튼을 누른 후 브라우저 콘솔창 F12를 확인해 보세요)</small>
+      <small style="color: gray">(버튼을 누른 후 브라우저 콘솔창 F12를 확인해 보세요)</small>
     </div>
   </div>
 </template>

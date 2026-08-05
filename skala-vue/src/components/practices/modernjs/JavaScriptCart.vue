@@ -5,7 +5,7 @@ const result2 = ref('')
 
 const runTask2 = () => {
   const currentCart = ['Apple', 'Banana']
-  const newProduct = {name: 'Orange', stock: 0, preview: null}
+  const newProduct = { name: 'Orange', stock: 0, preview: null }
 
   const updatedCart = [...currentCart, newProduct.name]
   const imgStatus = newProduct?.preview ?? '이미지 준비중'

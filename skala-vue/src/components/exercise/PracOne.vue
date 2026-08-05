@@ -29,7 +29,12 @@ const logRender = (target) => {
       <hr />
       <div>
         <h3>도시 검색</h3>
-        <input type="text" :value="searchQuery" @input="(e) => (searchQuery = e.target.value.trim())" placeholder="검색할 도시 이름 입력" />
+        <input
+          type="text"
+          :value="searchQuery"
+          @input="(e) => (searchQuery = e.target.value.trim())"
+          placeholder="검색할 도시 이름 입력"
+        />
         <!-- TODO: v-model.trim.lazy로 입력 받아보기 -> 이와 같이 입력을 받을 경우 input창에서 포커스가 없어지거나 엔터를 눌렀을 때만 입력이 된다.-->
         <!-- <input type="text" v-model.trim.lazy="searchQuery" placeholder="검색할 도시 이름 입력" /> -->
         <p>검색 중인 도시: {{ searchQuery }}</p>

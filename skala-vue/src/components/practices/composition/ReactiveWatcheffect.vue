@@ -1,5 +1,5 @@
 <script setup>
-import {ref, watchEffect} from 'vue'
+import { ref, watchEffect } from 'vue'
 
 const username = ref('홍길동')
 const age = ref(20)
@@ -22,7 +22,9 @@ watchEffect(() => {
     <div class="monitor">
       <h3>watchEffect 자동 모니터링 시스템</h3>
       <p>{{ logMessage }}</p>
-      <small style="color: gray;">새로고침하자마자 버튼을 안눌러도 로그가 이미 찍혀있는 특징을 주목하세요!</small>
+      <small style="color: gray"
+        >새로고침하자마자 버튼을 안눌러도 로그가 이미 찍혀있는 특징을 주목하세요!</small
+      >
     </div>
   </div>
 </template>
