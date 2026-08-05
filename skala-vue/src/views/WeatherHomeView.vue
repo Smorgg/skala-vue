@@ -6,9 +6,12 @@ import axios from 'axios'
 import BaseDashboardCard from '@/components/exercise/BaseDashboardCard.vue'
 import CitySearchPanel from '@/components/exercise/CitySearchPanel.vue'
 import WeatherCard from '@/components/exercise/WeatherCard.vue'
+import WeatherMap from '@/components/exercise/WeatherMap.vue'
+import { useSearchHistoryStore } from '@/stores/searchHistoryStore'
 
 const route = useRoute()
 const router = useRouter()
+const searchHistoryStore = useSearchHistoryStore()
 
 const weatherList = ref([])
 const searchQuery = ref('')
@@ -19,9 +22,11 @@ const searchError = ref('')
 // 빌드 환경 테스트용
 const API_URL = import.meta.env.VITE_API_URL
 
+// OpenWeather API
 const OPENWEATHER_API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY
 const BASE_URL = 'https://api.openweathermap.org/data/2.5/weather'
 
+// 한국 도시 이름 맵핑
 const koreanCityQueries = {
   서울: 'Seoul,KR',
   부산: 'Busan,KR',
@@ -40,6 +45,7 @@ const koreanCityQueries = {
   포항: 'Pohang,KR',
 }
 
+// 현재 날씨 정보 불러오기
 const fetchRealTimeWeather = async (city = '') => {
   isLoading.value = true
   searchError.value = ''
@@ -63,9 +69,12 @@ const fetchRealTimeWeather = async (city = '') => {
           temp: raw.main.temp,
           status: raw.weather[0].description,
           condition: raw.weather[0].main,
+          lat: raw.coord.lat,
+          lon: raw.coord.lon,
         }
       }),
     )
+    if (city.trim()) searchHistoryStore.addRecentSearch(city)
     console.log('[API 통신 완료] 메인 대시보드 실시간 기상 장부 동기화: ', weatherList.value)
   } catch (error) {
     console.error('날씨 API 연동 실패: ', error)
@@ -105,8 +114,10 @@ const visibleWeatherList = computed(() => {
   )
 })
 
-const handleSearch = () => {
-  fetchRealTimeWeather(searchQuery.value.trim())
+const handleSearch = (query = searchQuery.value) => {
+  const normalizedQuery = typeof query === 'string' ? query.trim() : searchQuery.value.trim()
+  searchQuery.value = normalizedQuery
+  fetchRealTimeWeather(normalizedQuery)
 }
 
 const handleWeatherDetail = (item) => {
@@ -128,21 +139,25 @@ const handleWeatherDetail = (item) => {
     />
 
     <BaseDashboardCard>
-      <h3 class="mb-3 text-h6 font-weight-bold">🏙️ 지역별 날씨 현황</h3>
+      <div class="mb-4 d-flex align-center ga-2">
+        <v-icon color="primary" icon="mdi-city-variant-outline" />
+        <h2 class="text-h6 font-weight-bold">지역별 날씨 현황</h2>
+      </div>
       <!-- 카드 선택 여부도 WeatherCard 컴포넌트에서 처리하기 때문데 selectedCityInfo또한 WeatherCard에서 처리하고 표시만 부모 컴포넌트에서 -->
       <v-alert v-if="isLoading" color="info" icon="mdi-satellite-uplink" variant="tonal">
         글로벌 기상 위성으로부터 실시간 기상 데이터를 수신 중입니다.
         <v-progress-linear class="mt-3" color="info" indeterminate />
       </v-alert>
-      <template v-else>
-        <WeatherCard
-          v-for="item in visibleWeatherList"
-          :key="item.id"
-          :city-item="item"
-          @select-card="(msg) => (selectedCityInfo = msg)"
-          @click-detail="handleWeatherDetail(item)"
-        />
-      </template>
+      <v-row v-else class="weather-grid" density="comfortable">
+        <v-col v-for="item in visibleWeatherList" :key="item.id" cols="12" lg="4" sm="6">
+          <WeatherCard
+            class="h-100"
+            :city-item="item"
+            @select-card="(msg) => (selectedCityInfo = msg)"
+            @click-detail="handleWeatherDetail(item)"
+          />
+        </v-col>
+      </v-row>
       <v-alert
         v-if="searchError"
         class="mt-3"
@@ -154,7 +169,9 @@ const handleWeatherDetail = (item) => {
       </v-alert>
     </BaseDashboardCard>
 
-    <v-alert color="success" icon="mdi-information-outline" variant="tonal">
+    <WeatherMap :loading="isLoading" :locations="weatherList" />
+
+    <v-alert color="info" icon="mdi-information-outline" variant="tonal">
       {{ selectedCityInfo }}
     </v-alert>
   </v-container>

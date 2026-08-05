@@ -14,6 +14,10 @@ const emit = defineEmits(['select-card', 'click-detail'])
 
 const configStore = useConfigStore()
 
+const normalizedCondition = computed(() =>
+  (props.cityItem.condition || props.cityItem.status || '').toLowerCase(),
+)
+
 const displayTemp = computed(() => {
   const rawTemp = props.cityItem.temp
   if (configStore.unit === 'fahrenheit') {
@@ -24,7 +28,7 @@ const displayTemp = computed(() => {
 })
 
 const weatherThemeClass = computed(() => {
-  const condition = (props.cityItem.condition || props.cityItem.status || '').toLowerCase()
+  const condition = normalizedCondition.value
 
   if (condition.includes('clear') || condition.includes('맑')) return 'weather-card--clear'
   if (condition.includes('cloud') || condition.includes('구름') || condition.includes('흐림')) {
@@ -50,27 +54,55 @@ const weatherThemeClass = computed(() => {
   }
   return 'weather-card--default'
 })
+
+const weatherIcon = computed(() => {
+  const condition = normalizedCondition.value
+
+  if (condition.includes('clear') || condition.includes('맑')) return 'mdi-weather-sunny'
+  if (condition.includes('cloud') || condition.includes('구름') || condition.includes('흐림')) {
+    return 'mdi-weather-cloudy'
+  }
+  if (condition.includes('thunder')) return 'mdi-weather-lightning-rainy'
+  if (
+    condition.includes('rain') ||
+    condition.includes('drizzle') ||
+    condition.includes('비') ||
+    condition.includes('소나기')
+  ) {
+    return 'mdi-weather-rainy'
+  }
+  if (condition.includes('snow') || condition.includes('눈')) return 'mdi-weather-snowy'
+  return 'mdi-weather-fog'
+})
 </script>
 
 <template>
   <v-card
-    class="weather-card mb-3"
+    class="weather-card"
     :class="weatherThemeClass"
     hover
     link
-    rounded="lg"
+    rounded="xl"
     variant="elevated"
     @click="emit('click-detail', cityItem.name, cityItem.status)"
   >
-    <v-card-item>
-      <v-card-title>{{ props.cityItem.name }}</v-card-title>
+    <v-card-item class="pa-5 pb-2">
+      <v-card-title class="font-weight-bold">{{ props.cityItem.name }}</v-card-title>
       <v-card-subtitle>{{ props.cityItem.status }}</v-card-subtitle>
+      <template #append>
+        <div class="weather-icon d-flex align-center justify-center">
+          <v-icon color="primary" :icon="weatherIcon" size="38" />
+        </div>
+      </template>
     </v-card-item>
 
-    <v-card-text>
-      <p class="mb-3 text-body-1">
-        현재 기온: <strong>{{ displayTemp }}{{ configStore.unitSymbol }}</strong>
-      </p>
+    <v-card-text class="flex-grow-1 px-5 pb-3">
+      <div class="mb-4">
+        <div class="text-caption text-medium-emphasis">현재 기온</div>
+        <strong class="temperature text-h4 font-weight-bold">
+          {{ displayTemp }}{{ configStore.unitSymbol }}
+        </strong>
+      </div>
 
       <v-chip v-if="cityItem.temp > 25" color="error" prepend-icon="mdi-weather-sunny" size="small">
         더움
@@ -86,7 +118,7 @@ const weatherThemeClass = computed(() => {
       <v-chip v-else color="info" prepend-icon="mdi-snowflake" size="small">선선함</v-chip>
     </v-card-text>
 
-    <v-card-actions>
+    <v-card-actions class="px-5 pb-4 pt-0">
       <v-spacer />
       <span class="d-inline-flex align-center ga-1 text-body-2 text-primary font-weight-medium">
         상세보기
@@ -116,13 +148,16 @@ const weatherThemeClass = computed(() => {
   );
   border-color: var(--weather-border);
   box-shadow: 0 8px 24px var(--weather-shadow);
+  min-height: 240px;
   transition:
+    transform 220ms ease,
     background 220ms ease,
     border-color 220ms ease,
     box-shadow 220ms ease;
 }
 
 .weather-card:hover {
+  transform: translateY(-3px);
   background: linear-gradient(
     135deg,
     var(--weather-start-hover) 0%,
@@ -131,6 +166,18 @@ const weatherThemeClass = computed(() => {
   );
   border-color: var(--weather-border-hover);
   box-shadow: 0 12px 30px var(--weather-shadow-hover);
+}
+
+.weather-icon {
+  width: 58px;
+  height: 58px;
+  border: 1px solid rgba(var(--v-theme-primary), 0.18);
+  border-radius: 18px;
+  background: rgba(var(--v-theme-primary), 0.1);
+}
+
+.temperature {
+  letter-spacing: -0.04em;
 }
 
 .weather-card--clear {
@@ -186,5 +233,11 @@ const weatherThemeClass = computed(() => {
   --weather-end-hover: rgba(144, 164, 174, 0.25);
   --weather-border-hover: rgba(120, 144, 156, 0.46);
   --weather-shadow-hover: rgba(84, 110, 122, 0.17);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .weather-card {
+    transition-duration: 1ms;
+  }
 }
 </style>

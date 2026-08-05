@@ -158,10 +158,12 @@ const getWeatherIcon = (condition) => {
   return 'mdi-weather-fog'
 }
 
-const handleSearch = () => {
+const handleSearch = (query = searchQuery.value) => {
+  const normalizedQuery = typeof query === 'string' ? query.trim() : searchQuery.value.trim()
+  searchQuery.value = normalizedQuery
   router.push({
     name: 'WeatherHome',
-    query: { search: searchQuery.value.trim() || undefined },
+    query: { search: normalizedQuery || undefined },
   })
 }
 </script>

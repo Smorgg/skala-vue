@@ -16,6 +16,35 @@ const app = createApp(App)
 const vuetify = createVuetify({
   components,
   directives,
+  theme: {
+    defaultTheme: 'system',
+    themes: {
+      light: {
+        colors: {
+          background: '#F3F7FB',
+          surface: '#FFFFFF',
+          primary: '#1976D2',
+          secondary: '#0288D1',
+          info: '#039BE5',
+          success: '#2E7D32',
+          warning: '#F59E0B',
+          error: '#D14343',
+        },
+      },
+      dark: {
+        colors: {
+          background: '#0B1220',
+          surface: '#121C2B',
+          primary: '#64B5F6',
+          secondary: '#4DD0E1',
+          info: '#4FC3F7',
+          success: '#66BB6A',
+          warning: '#FFCA28',
+          error: '#EF8A9A',
+        },
+      },
+    },
+  },
 })
 
 app.use(createPinia())

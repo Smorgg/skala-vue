@@ -227,7 +227,7 @@ onMounted(loadQuizRound)
 </script>
 
 <template>
-  <v-container class="pa-0" max-width="900">
+  <v-container class="pa-0" max-width="1200">
     <v-card class="quiz-hero mb-4" elevation="2" rounded="xl">
       <v-card-text class="pa-6">
         <div class="d-flex flex-wrap align-center justify-space-between ga-4">
@@ -310,6 +310,7 @@ onMounted(loadQuizRound)
 
           <p class="mt-3 text-caption text-medium-emphasis">
             OpenWeather의 3시간 단위 예보를 날짜별로 묶어 표시합니다.
+            <span class="d-sm-none"> 좌우로 넘겨 전체 예보를 확인하세요.</span>
           </p>
         </v-card-text>
 
@@ -329,16 +330,9 @@ onMounted(loadQuizRound)
             @keyup.enter="submitAnswer"
           />
 
-          <div class="mt-3 d-flex flex-wrap ga-2">
+          <div class="mt-3 d-flex ga-2">
             <v-btn
-              color="primary"
-              :disabled="isRoundComplete"
-              prepend-icon="mdi-check-bold"
-              @click="submitAnswer"
-            >
-              정답 확인
-            </v-btn>
-            <v-btn
+              min-width="130px"
               color="warning"
               :disabled="isRoundComplete || hintLevel >= 4"
               prepend-icon="mdi-lightbulb-outline"
@@ -346,6 +340,15 @@ onMounted(loadQuizRound)
               @click="revealHint"
             >
               {{ nextHintLabel }}
+            </v-btn>
+            <v-btn
+              class="ml-auto"
+              color="success"
+              :disabled="isRoundComplete"
+              prepend-icon="mdi-check-bold"
+              @click="submitAnswer"
+            >
+              정답 확인
             </v-btn>
           </div>
 
@@ -418,11 +421,16 @@ onMounted(loadQuizRound)
   gap: 10px;
   overflow-x: auto;
   padding: 4px 2px 10px;
+  scroll-padding-inline: 2px;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
 }
 
 .weather-day {
   min-width: 112px;
   border: 1px solid rgba(var(--v-theme-on-surface), 0.08);
+  scroll-snap-align: start;
 }
 
 .weather-day--오늘 {
@@ -432,5 +440,19 @@ onMounted(loadQuizRound)
 
 a {
   color: rgb(var(--v-theme-primary));
+}
+
+@media (max-width: 599px) {
+  .weather-timeline {
+    grid-auto-columns: minmax(128px, 44%);
+    grid-auto-flow: column;
+    grid-template-columns: none;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+
+  .weather-timeline::-webkit-scrollbar {
+    display: none;
+  }
 }
 </style>

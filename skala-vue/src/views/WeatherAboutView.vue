@@ -6,7 +6,10 @@ const router = useRouter()
 
 <template>
   <v-container class="pa-0" max-width="600">
-    <h2 class="mb-4 text-h5 font-weight-bold">서비스 소개</h2>
+    <div class="mb-4 d-flex align-center ga-2">
+      <v-icon color="primary" icon="mdi-information-outline" />
+      <h2 class="text-h5 font-weight-bold">서비스 소개</h2>
+    </div>
 
     <v-card elevation="2" rounded="xl">
       <v-card-text class="pa-6">
@@ -14,7 +17,7 @@ const router = useRouter()
           본 앱은 Vue 3 및 Vue Router 4 기반으로 제작된 실습용 기상 관측 대시보드 시스템입니다.
         </p>
 
-        <v-list bg-color="transparent">
+        <v-list class="feature-list" bg-color="transparent">
           <v-list-item prepend-icon="mdi-puzzle-outline">
             <template #title>
               <code class="text-error">component/exercise/</code> 폴더 내부의 독립 부품 연동
@@ -44,3 +47,21 @@ const router = useRouter()
     </v-btn>
   </v-container>
 </template>
+
+<style scoped>
+.feature-list :deep(.v-list-item) {
+  padding-block: 8px;
+}
+
+.feature-list :deep(.v-list-item-title) {
+  white-space: normal;
+  line-height: 1.5;
+  text-overflow: initial;
+}
+
+@media (max-width: 599px) {
+  .feature-list :deep(.v-list-item) {
+    padding-inline: 4px;
+  }
+}
+</style>
